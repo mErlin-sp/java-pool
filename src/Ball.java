@@ -4,36 +4,32 @@ import java.util.Random;
 
 public class Ball {
 
-    private final Component canvas;
-    private static final int XSIZE = 20;
-    private static final int YSIZE = 20;
-    private int x = 0;
-    private int y = 0;
+    private final BallCanvas canvas;
+    public static final int XSIZE = 20;
+    public static final int YSIZE = 20;
+    private int x;
+    private int y;
     private int dx = 2;
     private int dy = 2;
 
 
-    public Ball(Component c) {
+    public Ball(BallCanvas c) {
         this.canvas = c;
 
-
-        if (Math.random() < 0.5) {
-            x = new Random().nextInt(this.canvas.getWidth());
-            y = 0;
-        } else {
-            x = 0;
-            y = new Random().nextInt(this.canvas.getHeight());
-        }
-    }
-
-    public static void f() {
-        int a = 0;
+        do {
+            if (Math.random() < 0.5) {
+                x = new Random().nextInt(this.canvas.getWidth());
+                y = 0;
+            } else {
+                x = 0;
+                y = new Random().nextInt(this.canvas.getHeight());
+            }
+        } while (isInPocket());
     }
 
     public void draw(Graphics2D g2) {
         g2.setColor(Color.darkGray);
         g2.fill(new Ellipse2D.Double(x, y, XSIZE, YSIZE));
-
     }
 
     public void move() {
@@ -55,6 +51,29 @@ public class Ball {
             y = this.canvas.getHeight() - YSIZE;
             dy = -dy;
         }
+        this.canvas.repaint();
+    }
+
+    public boolean isInPocket() {
+        if (x < (XSIZE * 2) && y < (XSIZE * 2)) {
+            return true;
+        } else if (x > (((double) this.canvas.getWidth() / 2) - (double) (XSIZE)) && x < (((double) this.canvas.getWidth() / 2) + (double) (XSIZE)) && y < (XSIZE * 2)) {
+            return true;
+        } else if (x > (this.canvas.getWidth() - (XSIZE * 2)) && y < (XSIZE * 2)) {
+            return true;
+        } else if (x < (XSIZE * 2) && y > (this.canvas.getHeight() - (XSIZE * 2))) {
+            return true;
+        } else if (x > (((double) this.canvas.getWidth() / 2) - (double) (XSIZE)) && x < (((double) this.canvas.getWidth() / 2) + (double) (XSIZE)) && y > (this.canvas.getHeight() - (XSIZE * 2))) {
+            return true;
+        } else if (x > (this.canvas.getWidth() - (XSIZE * 2)) && y > (this.canvas.getHeight() - (XSIZE * 2))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void destroy() {
+        this.canvas.remove(this);
         this.canvas.repaint();
     }
 

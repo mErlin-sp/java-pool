@@ -1,13 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class BounceFrame extends JFrame {
 
     private final BallCanvas ballCanvas;
-    public static final int WIDTH = 450;
-    public static final int HEIGHT = 350;
+    public static final int WIDTH = 900;
+    public static final int HEIGHT = 450;
+    private static int ballCounter = 0;
+    private final JLabel ballCountLabel;
+
+    public void incrementBallCounter() {
+        ballCounter++;
+        ballCountLabel.setText("Ball Count: " + ballCounter);
+    }
 
     public BounceFrame() {
         this.setSize(WIDTH, HEIGHT);
@@ -35,18 +40,15 @@ public class BounceFrame extends JFrame {
             System.out.println("Thread name = " + thread.getName());
         });
 
-        buttonStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                System.exit(0);
-            }
-
-        });
+        buttonStop.addActionListener(e -> System.exit(0));
 
 
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
+
+        ballCountLabel = new JLabel();
+        ballCountLabel.setText("Ball Count: 0");
+        buttonPanel.add(ballCountLabel,BorderLayout.EAST);
 
         content.add(buttonPanel, BorderLayout.SOUTH);
     }
