@@ -5,6 +5,7 @@ import java.util.Random;
 public class Ball {
 
     private final BallCanvas canvas;
+    private final BallColor color;
     public static final int XSIZE = 20;
     public static final int YSIZE = 20;
     private int x;
@@ -12,9 +13,17 @@ public class Ball {
     private int dx = 2;
     private int dy = 2;
 
+    public enum BallColor {
+        Red, Blue
+    }
 
-    public Ball(BallCanvas c) {
+
+    public Ball(BallCanvas c, BallColor color) {
         this.canvas = c;
+        this.color = color;
+
+//        x = 100;
+//        y = 100;
 
         do {
             if (Math.random() < 0.5) {
@@ -28,7 +37,14 @@ public class Ball {
     }
 
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.darkGray);
+        if (this.color == BallColor.Red) {
+            g2.setColor(Color.RED);
+        } else if (this.color == BallColor.Blue) {
+            g2.setColor(Color.BLUE);
+        } else {
+            g2.setColor(Color.darkGray);
+        }
+
         g2.fill(new Ellipse2D.Double(x, y, XSIZE, YSIZE));
     }
 
@@ -55,6 +71,9 @@ public class Ball {
     }
 
     public boolean isInPocket() {
+//        if (true) {
+//            return false;
+//        }
         if (x < (XSIZE * 2) && y < (XSIZE * 2)) {
             return true;
         } else if (x > (((double) this.canvas.getWidth() / 2) - (double) (XSIZE)) && x < (((double) this.canvas.getWidth() / 2) + (double) (XSIZE)) && y < (XSIZE * 2)) {
