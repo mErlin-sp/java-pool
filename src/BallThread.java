@@ -1,8 +1,19 @@
+import java.awt.*;
+
 public class BallThread extends Thread {
     private final Ball b;
 
-    public BallThread(Ball ball) {
-        b = ball;
+    public BallThread(Ball b) {
+        System.out.println(Thread.currentThread());
+        this.b = b;
+
+        if (b.color == Ball.BallColor.Red) {
+            this.setPriority(10);
+        } else if (b.color == Ball.BallColor.Blue) {
+            this.setPriority(1);
+        } else {
+            this.setPriority(1);
+        }
     }
 
     @Override
@@ -10,15 +21,12 @@ public class BallThread extends Thread {
         try {
             for (int i = 1; i < 10000; i++) {
                 b.move();
-                if (b.isInPocket()) {
+                if (!Bounce.hidePockets && b.isInPocket()) {
                     System.out.println("Ball in pocket!");
                     Bounce.frame.incrementBallCounter();
                     b.destroy();
                     break;
                 }
-
-                System.out.println("Thread name = "
-                        + Thread.currentThread().getName());
                 Thread.sleep(5);
             }
         } catch (InterruptedException ignored) {

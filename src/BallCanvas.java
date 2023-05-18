@@ -31,7 +31,9 @@ public class BallCanvas extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        drawPockets(g2);
+        if (!Bounce.hidePockets) {
+            drawPockets(g2);
+        }
         for (Ball b : balls) {
             b.draw(g2);
         }

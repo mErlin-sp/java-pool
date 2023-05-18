@@ -5,7 +5,7 @@ import java.util.Random;
 public class Ball {
 
     private final BallCanvas canvas;
-    private final BallColor color;
+    final BallColor color;
     public static final int XSIZE = 20;
     public static final int YSIZE = 20;
     private int x;
@@ -18,22 +18,24 @@ public class Ball {
     }
 
 
-    public Ball(BallCanvas c, BallColor color) {
+    public Ball(BallCanvas c, BallColor color, boolean randomStart) {
         this.canvas = c;
         this.color = color;
 
-//        x = 100;
-//        y = 100;
+        x = 100;
+        y = 100;
 
-        do {
-            if (Math.random() < 0.5) {
-                x = new Random().nextInt(this.canvas.getWidth());
-                y = 0;
-            } else {
-                x = 0;
-                y = new Random().nextInt(this.canvas.getHeight());
-            }
-        } while (isInPocket());
+        if (randomStart) {
+            do {
+                if (Math.random() < 0.5) {
+                    x = new Random().nextInt(this.canvas.getWidth());
+                    y = 0;
+                } else {
+                    x = 0;
+                    y = new Random().nextInt(this.canvas.getHeight());
+                }
+            } while (isInPocket());
+        }
     }
 
     public void draw(Graphics2D g2) {
