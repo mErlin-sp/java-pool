@@ -2,6 +2,7 @@ import javax.swing.*;
 
 //
 // By Cay S. Horstman
+// Modified by Oleksandr Popov
 //
 
 public class Bounce {
