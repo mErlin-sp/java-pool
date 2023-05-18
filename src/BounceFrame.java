@@ -34,7 +34,7 @@ public class BounceFrame extends JFrame {
         JButton buttonExp1 = new JButton("Experiment 1");
         JButton buttonExp2 = new JButton("Experiment 2");
         JButton buttonExp3 = new JButton("Experiment 3");
-
+        JButton buttonJoinDemo = new JButton("Join Demo");
         JButton buttonHidePockets = new JButton("Hide Pockets");
 
         JButton buttonStop = new JButton("Stop");
@@ -43,7 +43,7 @@ public class BounceFrame extends JFrame {
             Ball b = new Ball(ballCanvas, Ball.BallColor.Red, true);
             ballCanvas.add(b);
 
-            BallThread thread = new BallThread(b);
+            BallThread thread = new BallThread(b, 10000);
             thread.setPriority(10);
             thread.start();
             System.out.println("Thread name = " + thread.getName());
@@ -54,7 +54,7 @@ public class BounceFrame extends JFrame {
                 Ball b = new Ball(ballCanvas, Ball.BallColor.Blue, true);
                 ballCanvas.add(b);
 
-                BallThread thread = new BallThread(b);
+                BallThread thread = new BallThread(b, 10000);
                 thread.setPriority(1);
                 thread.start();
                 System.out.println("Thread name = " + thread.getName());
@@ -68,13 +68,13 @@ public class BounceFrame extends JFrame {
             for (int i = 0; i < 10; i++) {
                 Ball b = new Ball(ballCanvas, Ball.BallColor.Blue, false);
                 ballCanvas.add(b);
-                ballThreads.add(new BallThread(b));
+                ballThreads.add(new BallThread(b, 10000));
             }
 
             // Create 1 red ball
             Ball b = new Ball(ballCanvas, Ball.BallColor.Red, false);
             ballCanvas.add(b);
-            ballThreads.add(new BallThread(b));
+            ballThreads.add(new BallThread(b, 10000));
 
             ballThreads.forEach(Thread::start);
 
@@ -87,13 +87,13 @@ public class BounceFrame extends JFrame {
             for (int i = 0; i < 50; i++) {
                 Ball b = new Ball(ballCanvas, Ball.BallColor.Blue, false);
                 ballCanvas.add(b);
-                ballThreads.add(new BallThread(b));
+                ballThreads.add(new BallThread(b, 10000));
             }
 
             // Create 1 red ball
             Ball b = new Ball(ballCanvas, Ball.BallColor.Red, false);
             ballCanvas.add(b);
-            ballThreads.add(new BallThread(b));
+            ballThreads.add(new BallThread(b, 10000));
 
             ballThreads.forEach(Thread::start);
         });
@@ -105,16 +105,33 @@ public class BounceFrame extends JFrame {
             for (int i = 0; i < 100; i++) {
                 Ball b = new Ball(ballCanvas, Ball.BallColor.Blue, false);
                 ballCanvas.add(b);
-                ballThreads.add(new BallThread(b));
+                ballThreads.add(new BallThread(b, 10000));
             }
 
             // Create 1 red ball
             Ball b = new Ball(ballCanvas, Ball.BallColor.Red, false);
             ballCanvas.add(b);
-            ballThreads.add(new BallThread(b));
+            ballThreads.add(new BallThread(b, 10000));
 
             ballThreads.forEach(Thread::start);
         });
+
+        buttonJoinDemo.addActionListener(e -> new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    Ball b = new Ball(ballCanvas, (i % 2 == 0) ? Ball.BallColor.Red : Ball.BallColor.Blue, true);
+                    ballCanvas.add(b);
+                    Thread ballThread = new BallThread(b, 500);
+                    ballThread.start();
+                    try {
+                        ballThread.join();
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        }).start());
 
         buttonHidePockets.addActionListener(e -> {
             Bounce.hidePockets = true;
@@ -131,6 +148,7 @@ public class BounceFrame extends JFrame {
         buttonPanel.add(buttonExp1);
         buttonPanel.add(buttonExp2);
         buttonPanel.add(buttonExp3);
+        buttonPanel.add(buttonJoinDemo);
         buttonPanel.add(buttonHidePockets);
         buttonPanel.add(buttonStop);
 
